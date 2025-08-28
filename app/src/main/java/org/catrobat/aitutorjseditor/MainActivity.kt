@@ -260,7 +260,7 @@ class MainActivity : ComponentActivity() {
                         show = showAiTutor,
                         onDismissRequest = { showAiTutor = false },
                         codeContext = text,
-                        outputContext = ""
+                        systemContext = "The user is editing a JavaScript program for a Phaser game."
                     )
                 }
             }
