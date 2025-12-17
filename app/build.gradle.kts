@@ -63,5 +63,9 @@ dependencies {
     implementation("io.github.rosemoe:language-textmate")
 
     // Catrobat AI Tutor
-    implementation("org.catrobat:aitutor:0.0.1")
+    implementation("com.github.Catrobat:catrobat-ai-tutor:develop-SNAPSHOT") {
+        // Choose one of the following to exclude either debug or release variant
+//        exclude(group = "com.github.Catrobat.catrobat-ai-tutor", module = "aitutor-android-debug")
+        exclude(group = "com.github.Catrobat.catrobat-ai-tutor", module = "aitutor-android")
+    }
 }
