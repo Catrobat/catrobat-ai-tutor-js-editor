@@ -57,6 +57,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Icon Extended
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+
     // Sora Editor
     implementation(platform("io.github.rosemoe:editor-bom:0.23.7"))
     implementation("io.github.rosemoe:editor")
