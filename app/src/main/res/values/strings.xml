@@ -1,4 +1,17 @@
 <resources>
     <string name="app_name">AI Tutor (JS)</string>
     <string name="title_activity_game">GameActivity</string>
+    <string name="error_accessing_resource_id_for">Error accessing resource ID for %1$s: %2$s</string>
+    <string name="error_reading_js_file">Error reading JS file: %1$s</string>
+    <string name="error_loading_file">// Error loading file: %1$s</string>
+    <string name="select_javascript_file">Select JavaScript File</string>
+    <string name="close">Close</string>
+    <string name="no_javascript_files_found">No JavaScript files found</string>
+    <string name="add_js_files_to_res_raw_folder">Add .js files to res/raw folder</string>
+    <string name="javascript_file_icon">JavaScript File Icon</string>
+    <string name="no_code_provided">// No code provided</string>
+    <string name="received_user_code">Received user code: %1$s</string>
+    <string name="select_file">Select File</string>
+    <string name="run_code">Run Code</string>
+    <string name="ai_tutor_system_prompt">The user is editing a JavaScript program for a Phaser game.</string>
 </resources>
