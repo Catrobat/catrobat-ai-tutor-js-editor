@@ -35,8 +35,8 @@ class GameActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // Get the JavaScript code passed from MainActivity
-        val userCode = intent.getStringExtra("USER_CODE") ?: "// No code provided"
-        Log.d("GameActivity", "Received user code: $userCode")
+        val userCode = intent.getStringExtra("USER_CODE") ?: getString(R.string.no_code_provided)
+        Log.d("GameActivity", getString(R.string.received_user_code, userCode))
 
         val escapedUserCode = userCode
             .replace("\\", "\\\\")
