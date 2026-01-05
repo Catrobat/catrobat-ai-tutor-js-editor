@@ -58,12 +58,12 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Icon Extended
-    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+    implementation(libs.androidx.compose.material.icons.extended)
 
     // Sora Editor
-    implementation(platform("io.github.rosemoe:editor-bom:0.23.7"))
-    implementation("io.github.rosemoe:editor")
-    implementation("io.github.rosemoe:language-textmate")
+    implementation(platform(libs.editor.bom))
+    implementation(libs.editor)
+    implementation(libs.language.textmate)
 
     // Catrobat AI Tutor
     implementation("com.github.Catrobat:catrobat-ai-tutor:develop-SNAPSHOT") {
