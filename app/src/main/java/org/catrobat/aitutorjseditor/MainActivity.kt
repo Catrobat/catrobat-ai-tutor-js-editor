@@ -17,13 +17,17 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import io.github.rosemoe.sora.event.ContentChangeEvent
@@ -32,6 +36,7 @@ import io.github.rosemoe.sora.langs.textmate.TextMateLanguage
 import io.github.rosemoe.sora.widget.CodeEditor
 import io.github.rosemoe.sora.widget.style.builtin.ScaleCursorAnimator
 import io.github.rosemoe.sora.widget.subscribeEvent
+import kotlinx.coroutines.launch
 import org.catrobat.aitutor.ui.public.AiTutorFloatingActionButton
 import org.catrobat.aitutor.ui.public.AiTutorView
 import org.catrobat.aitutorjseditor.ui.theme.CatrobatAITutorJSEditorTheme
@@ -47,6 +52,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             CatrobatAITutorJSEditorTheme {
                 val context = LocalContext.current
+                val snackbarHostState = remember { SnackbarHostState() }
+                val coroutineScope = rememberCoroutineScope()
+
                 var text by rememberSaveable {
                     mutableStateOf(
                         """
@@ -60,6 +68,9 @@ class MainActivity : ComponentActivity() {
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
+                    snackbarHost = {
+                        SnackbarHost(hostState = snackbarHostState)
+                    },
                     floatingActionButton = {
                         Column {
                             FloatingActionButton(onClick = {
@@ -67,7 +78,7 @@ class MainActivity : ComponentActivity() {
                             }) {
                                 Icon(
                                     imageVector = Icons.Filled.Folder,
-                                    contentDescription = "Select File"
+                                    contentDescription = stringResource(R.string.select_file)
                                 )
                             }
                             Spacer(modifier = Modifier.padding(8.dp))
@@ -86,7 +97,7 @@ class MainActivity : ComponentActivity() {
                             }) {
                                 Icon(
                                     imageVector = Icons.Filled.PlayArrow,
-                                    contentDescription = "Run Code"
+                                    contentDescription = stringResource(R.string.run_code)
                                 )
                             }
                         }
@@ -151,7 +162,7 @@ class MainActivity : ComponentActivity() {
                         show = showAiTutor,
                         onDismissRequest = { showAiTutor = false },
                         codeContext = text,
-                        systemContext = "The user is editing a JavaScript program for a Phaser game."
+                        systemContext = stringResource(R.string.ai_tutor_system_prompt)
                     )
 
                     FileSelectorDialog(
@@ -159,6 +170,14 @@ class MainActivity : ComponentActivity() {
                         onDismissRequest = { showFileSelector = false },
                         onFileSelected = { fileContent ->
                             text = fileContent
+                        },
+                        onError = { errorMessage ->
+                            coroutineScope.launch {
+                                snackbarHostState.showSnackbar(
+                                    message = errorMessage,
+                                    withDismissAction = true
+                                )
+                            }
                         }
                     )
                 }

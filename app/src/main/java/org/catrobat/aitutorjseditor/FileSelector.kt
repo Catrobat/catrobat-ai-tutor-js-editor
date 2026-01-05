@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -50,7 +51,10 @@ data class JsFile(
 /**
  * Helper function to get all JavaScript files from res/raw folder
  */
-fun getAllJsFiles(): List<JsFile> {
+fun getAllJsFiles(
+    context: Context,
+    onError: (String) -> Unit,
+): List<JsFile> {
     val files = mutableListOf<JsFile>()
     val rawClass = R.raw::class.java
 
@@ -63,7 +67,13 @@ fun getAllJsFiles(): List<JsFile> {
             files.add(JsFile(resourceId, fileName, displayName))
 
         } catch (e: Exception) {
-            Log.e("FileSelector", "Error accessing resource ID for ${field.name}: ${e.message}")
+            val errorMessage = context.getString(
+                R.string.error_accessing_resource_id_for,
+                field.name,
+                e.message
+            )
+            Log.e("FileSelector", errorMessage)
+            onError(errorMessage)
         }
     }
 
@@ -86,14 +96,23 @@ private fun formatFileName(fileName: String): String {
 /**
  * Read content from a raw resource file
  */
-fun readJsFile(context: Context, resourceId: Int): String {
+fun readJsFile(
+    context: Context,
+    resourceId: Int,
+    onError: (String) -> Unit,
+): String {
     return try {
         val inputStream = context.resources.openRawResource(resourceId)
         val reader = BufferedReader(InputStreamReader(inputStream))
         reader.use { it.readText() }
     } catch (e: Exception) {
-        Log.e("FileSelector", "Error reading JS file: ${e.message}")
-        "// Error loading file: ${e.message}"
+        val errorMessage = context.getString(
+            R.string.error_reading_js_file,
+            e.message
+        )
+        Log.e("FileSelector", errorMessage)
+        onError(errorMessage)
+        context.getString(R.string.error_loading_file, e.message)
     }
 }
 
@@ -106,11 +125,12 @@ fun FileSelectorDialog(
     show: Boolean,
     onDismissRequest: () -> Unit,
     onFileSelected: (String) -> Unit,
+    onError: (String) -> Unit,
 ) {
     if (!show) return
 
     val context = LocalContext.current
-    val jsFiles = remember { getAllJsFiles() }
+    val jsFiles = remember { getAllJsFiles(context = context, onError = onError) }
 
     Dialog(
         onDismissRequest = onDismissRequest,
@@ -140,14 +160,14 @@ fun FileSelectorDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Select JavaScript File",
+                        text = stringResource(R.string.select_javascript_file),
                         style = MaterialTheme.typography.headlineSmall,
                         fontWeight = FontWeight.Bold
                     )
                     IconButton(onClick = onDismissRequest) {
                         Icon(
                             imageVector = Icons.Filled.Close,
-                            contentDescription = "Close"
+                            contentDescription = stringResource(R.string.close)
                         )
                     }
                 }
@@ -162,12 +182,12 @@ fun FileSelectorDialog(
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = "No JavaScript files found",
+                                text = stringResource(R.string.no_javascript_files_found),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                             Text(
-                                text = "Add .js files to res/raw folder",
+                                text = stringResource(R.string.add_js_files_to_res_raw_folder),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(top = 8.dp)
@@ -183,7 +203,11 @@ fun FileSelectorDialog(
                             FileItem(
                                 file = file,
                                 onClick = {
-                                    val content = readJsFile(context, file.resourceId)
+                                    val content = readJsFile(
+                                        context = context,
+                                        resourceId = file.resourceId,
+                                        onError = onError
+                                    )
                                     onFileSelected(content)
                                     onDismissRequest()
                                 }
@@ -221,7 +245,7 @@ private fun FileItem(
         ) {
             Icon(
                 imageVector = Icons.Filled.Code,
-                contentDescription = "JavaScript File Icon",
+                contentDescription = stringResource(R.string.javascript_file_icon),
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(40.dp)
             )
