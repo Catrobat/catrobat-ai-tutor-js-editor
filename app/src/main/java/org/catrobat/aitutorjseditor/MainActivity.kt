@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
                     )
                 }
                 var showAiTutor by remember { mutableStateOf(false) }
-                var showFileSelector by remember { mutableStateOf(false) }
+                var showFileSelector by remember { mutableStateOf(true) }
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
