@@ -80,8 +80,6 @@ function create() {
     });
 
     this.input.on("pointerup", function () {
-        target = null;
-        player.setVelocity(0, 0);
     });
 
     scoreText = this.add.text(16, 16, "Score: 0", {

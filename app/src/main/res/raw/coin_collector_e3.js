@@ -118,15 +118,4 @@ function collectCoin(player, coin) {
     score += 10;
     scoreText.setText("Score: " + score);
 
-    this.time.delayedCall(600, () => {
-        const x = Phaser.Math.Between(30, 330);
-        const y = Phaser.Math.Between(80, 600);
-
-        coin.enableBody(true, x, y, true, true);
-        coin.setVelocity(
-            Phaser.Math.Between(-120, 120),
-            Phaser.Math.Between(-120, 120)
-        );
-        coin.setCollideWorldBounds(true);
-    });
 }
