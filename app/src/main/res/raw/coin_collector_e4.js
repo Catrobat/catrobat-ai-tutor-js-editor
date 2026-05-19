@@ -118,7 +118,7 @@ function collectCoin(player, coin) {
     score += 10;
     scoreText.setText("Score: " + score);
 
-    this.time.delayedCall(600, () => {
+    this.time.delayedCall(50, () => {
         const x = Phaser.Math.Between(30, 330);
         const y = Phaser.Math.Between(80, 600);
 

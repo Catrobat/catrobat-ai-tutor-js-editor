@@ -113,8 +113,6 @@ function update() {
 }
 
 function collectCoin(player, coin) {
-    coin.disableBody(true, true);
-
     score += 10;
     scoreText.setText("Score: " + score);
 
